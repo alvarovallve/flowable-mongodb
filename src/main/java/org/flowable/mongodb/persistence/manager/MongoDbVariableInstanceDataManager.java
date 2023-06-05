@@ -15,7 +15,6 @@ package org.flowable.mongodb.persistence.manager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -26,6 +25,7 @@ import org.flowable.variable.service.impl.persistence.entity.VariableInstanceEnt
 import org.flowable.variable.service.impl.persistence.entity.VariableInstanceEntityImpl;
 import org.flowable.variable.service.impl.persistence.entity.data.VariableInstanceDataManager;
 import org.flowable.variable.service.impl.persistence.entity.data.impl.cachematcher.VariableInstanceByExecutionIdMatcher;
+import org.flowable.variable.service.impl.persistence.entity.data.impl.cachematcher.VariableInstanceByTaskIdMatcher;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.model.Filters;
@@ -38,6 +38,7 @@ public class MongoDbVariableInstanceDataManager extends AbstractMongoDbDataManag
     public static final String COLLECTION_VARIABLES = "variables";
 
     protected VariableInstanceByExecutionIdMatcher variableInstanceByExecutionIdMatcher = new VariableInstanceByExecutionIdMatcher();
+    protected VariableInstanceByTaskIdMatcher variableInstanceByTaskIdMatcher = new VariableInstanceByTaskIdMatcher();
 
     @Override
     public String getCollection() {
@@ -108,10 +109,20 @@ public class MongoDbVariableInstanceDataManager extends AbstractMongoDbDataManag
         }
         return null;
     }
+    
+    protected List<VariableInstanceEntity> findVariableInstancesByTaskId(String taskId) {
+        return getMongoDbSession().find(COLLECTION_VARIABLES, Filters.eq("taskId", taskId), taskId,
+            VariableInstanceEntityImpl.class, variableInstanceByTaskIdMatcher, true);
+    }
 
     @Override
     public void deleteVariablesByTaskId(String taskId) {
-        throw new UnsupportedOperationException();
+    	List<VariableInstanceEntity> variables = findVariableInstancesByTaskId(taskId);
+        if (variables != null) {
+            for (VariableInstanceEntity variableInstanceEntity : variables) {
+                getMongoDbSession().delete(COLLECTION_VARIABLES, variableInstanceEntity);
+            }
+        }
     }
 
     protected List<VariableInstanceEntity> findVariableInstancesByExecutionId(String executionId) {
