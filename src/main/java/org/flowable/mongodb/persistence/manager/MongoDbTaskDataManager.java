@@ -148,6 +148,10 @@ public class MongoDbTaskDataManager extends AbstractMongoDbDataManager<TaskEntit
         if (taskQuery.getName() != null) {
             andFilters.add(Filters.eq("name", taskQuery.getName()));
         }
+        
+        if (taskQuery.getKey() != null) {
+        	andFilters.add(Filters.eq("taskDefinitionKey", taskQuery.getKey()));
+        }
 
         Bson filter = null;
         if (andFilters.size() > 0) {
