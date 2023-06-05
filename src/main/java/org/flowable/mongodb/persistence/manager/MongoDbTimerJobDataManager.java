@@ -124,7 +124,8 @@ public class MongoDbTimerJobDataManager extends AbstractMongoDbDataManager<Timer
 
     @Override
     public List<TimerJobEntity> findExpiredJobs(List<String> enabledCategories, Page page) {
-        throw new UnsupportedOperationException();
+    	// TODO returns empty list to continue, implement
+    	return new ArrayList<>();
     }
 
     @Override

@@ -12,6 +12,7 @@
  */
 package org.flowable.mongodb.persistence.manager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -98,7 +99,8 @@ public class MongoDbExternalWorkerJobDataManager extends AbstractMongoDbDataMana
 
     @Override
     public List<ExternalWorkerJobEntity> findExpiredJobs(List<String> enabledCategories, Page page) {
-        throw new UnsupportedOperationException();
+    	// TODO returns empty list to continue, implement
+    	return new ArrayList<>();
     }
 
     @Override
