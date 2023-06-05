@@ -341,7 +341,16 @@ public class MongoDbExecutionDataManager extends AbstractMongoDbDataManager<Exec
 
     @Override
     public void updateProcessInstanceLockTime(String processInstanceId, Date lockDate, String lockOwner, Date expirationTime) {
-        throw new UnsupportedOperationException();
+        BasicDBObject updateObject = new BasicDBObject();
+        updateObject.append("lockTime", lockDate);
+
+        // TODO lockOwner filter?
+
+        Bson filter = Filters.and(Filters.eq("_id", processInstanceId), Filters.or(Filters.eq("lockTime", null), Filters.lt("lockTime", expirationTime)));
+        UpdateResult updateResult = getMongoDbSession().updateImmediately(COLLECTION_EXECUTIONS, filter, updateObject);
+        if (updateResult.getModifiedCount() != 1) {
+            throw new FlowableOptimisticLockingException("Could not lock process instance");
+        }
     }
 
     public void updateProcessInstanceLockTime(String processInstanceId, Date lockDate, Date expirationTime) {
