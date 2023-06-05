@@ -29,6 +29,7 @@ import org.flowable.job.service.JobServiceConfiguration;
 import org.flowable.mongodb.persistence.MongoDbSessionFactory;
 import org.flowable.mongodb.persistence.manager.AbstractMongoDbDataManager;
 import org.flowable.mongodb.persistence.manager.MongoDbActivityInstanceDataManager;
+import org.flowable.mongodb.persistence.manager.MongoDbByteArrayDataManager;
 import org.flowable.mongodb.persistence.manager.MongoDbCommentDataManager;
 import org.flowable.mongodb.persistence.manager.MongoDbDeploymentDataManager;
 import org.flowable.mongodb.persistence.manager.MongoDbEventSubscriptionDataManager;
@@ -53,7 +54,6 @@ import org.flowable.mongodb.persistence.manager.MongoDbDeadLetterJobDataManager;
 import org.flowable.mongodb.persistence.manager.MongoDbSuspendedJobDataManager;
 import org.flowable.mongodb.schema.MongoProcessSchemaManager;
 import org.flowable.mongodb.transaction.MongoDbTransactionContextFactory;
-import org.flowable.mongodb.transaction.MongoDbTransactionInterceptor;
 import org.flowable.task.service.TaskServiceConfiguration;
 import org.flowable.variable.service.VariableServiceConfiguration;
 
@@ -178,6 +178,9 @@ public class MongoDbProcessEngineConfiguration extends ProcessEngineConfiguratio
 
         MongoDbResourceDataManager mongoDbResourceDataManager = new MongoDbResourceDataManager(this);
         this.resourceDataManager = mongoDbResourceDataManager;
+        
+        MongoDbByteArrayDataManager mongoDbByteArrayDataManager = new MongoDbByteArrayDataManager(this);
+        this.byteArrayDataManager = mongoDbByteArrayDataManager;
 
         MongoDbProcessDefinitionDataManager mongoDbProcessDefinitionDataManager = new MongoDbProcessDefinitionDataManager(this);
         this.processDefinitionDataManager = mongoDbProcessDefinitionDataManager;

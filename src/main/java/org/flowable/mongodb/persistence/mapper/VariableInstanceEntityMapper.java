@@ -13,8 +13,8 @@
 package org.flowable.mongodb.persistence.mapper;
 
 import org.bson.Document;
+import org.bson.types.Binary;
 import org.flowable.engine.impl.util.CommandContextUtil;
-import org.flowable.mongodb.persistence.EntityToDocumentMapper;
 import org.flowable.variable.service.impl.persistence.entity.VariableInstanceEntityImpl;
 
 /**
@@ -45,6 +45,14 @@ public class VariableInstanceEntityMapper extends AbstractEntityToDocumentMapper
                 .getVariableType(document.getString("typeName")));
         variableEntity.setTypeName(document.getString("typeName"));
         
+        if (document.getString("byteArrayId") != null) {
+            Binary binary = (Binary) document.get("byteArrayValue");
+            byte[] data = binary.getData();
+            
+            variableEntity.getBytes();
+            variableEntity.getByteArrayRef().setValue(null, data, "bpmn");
+        }
+        
         return variableEntity;
     }
 
@@ -68,6 +76,16 @@ public class VariableInstanceEntityMapper extends AbstractEntityToDocumentMapper
         appendIfNotNull(variableDocument, "textValue", variableEntity.getTextValue());
         appendIfNotNull(variableDocument, "textValue2", variableEntity.getTextValue2());
         appendIfNotNull(variableDocument, "typeName", variableEntity.getTypeName());
+        
+        if (variableEntity.getByteArrayRef() != null) {
+        	appendIfNotNull(variableDocument, "byteArrayId", variableEntity.getByteArrayRef().getId());
+        	
+        	// se almacena el valor de la variable. Se necesita para despues instanciar correctamente VariableInstanceEntityImpl
+        	// el problema de fondo es que no se puede instanciar ByteArrayRef solo con ID. Entonces la soluciones es incluir el valor directo.
+        	appendIfNotNull(variableDocument, "byteArrayValue", variableEntity.getBytes() /*objectToByteArray(variableEntity.getCachedValue())*/);
+        }
+        
+        
         
         return variableDocument;
     }

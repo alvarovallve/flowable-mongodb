@@ -62,6 +62,7 @@ import org.flowable.mongodb.persistence.manager.MongoDbTaskDataManager;
 import org.flowable.mongodb.persistence.manager.MongoDbTimerJobDataManager;
 import org.flowable.mongodb.persistence.manager.MongoDbVariableInstanceDataManager;
 import org.flowable.mongodb.persistence.mapper.ActivityInstanceEntityMapper;
+import org.flowable.mongodb.persistence.mapper.ByteArrayEntityMapper;
 import org.flowable.mongodb.persistence.mapper.CommentEntityMapper;
 import org.flowable.mongodb.persistence.mapper.DeploymentEntityMapper;
 import org.flowable.mongodb.persistence.mapper.EventSubscriptionEntityMapper;
@@ -117,7 +118,7 @@ public class MongoDbSessionFactory implements SessionFactory {
     }
 
     protected void initDefaultMappers() {
-        registerEntityMapper(ByteArrayEntityImpl.class,new JobByteArrayEntityMapper(), MongoDbJobByteArrayDataManager.COLLECTION_JOB_BYTE_ARRAY);
+        registerEntityMapper(ByteArrayEntityImpl.class,new ByteArrayEntityMapper(), MongoDbResourceDataManager.COLLECTION_BYTE_ARRAY);
         registerEntityMapper(DeploymentEntityImpl.class, new DeploymentEntityMapper(), MongoDbDeploymentDataManager.COLLECTION_DEPLOYMENT);
         registerEntityMapper(ResourceEntityImpl.class, new ResourceEntityMapper(), MongoDbResourceDataManager.COLLECTION_BYTE_ARRAY);
         registerEntityMapper(MongoDbProcessDefinitionEntityImpl.class, new ProcessDefinitionEntityMapper(), MongoDbProcessDefinitionDataManager.COLLECTION_PROCESS_DEFINITIONS);
